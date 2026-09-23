@@ -2,7 +2,8 @@ name: scout
 
 services:
   postgres:
-    image: postgres:16-alpine
+    # pgvector-enabled Postgres — required for document/memory embeddings (RAG step).
+    image: pgvector/pgvector:pg16
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-scout}
