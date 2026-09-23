@@ -1,49 +1,35 @@
 # scout
 
-A CLI AI research agent. Ask a question — scout plans, searches the web, reads
-sources, and answers with citations you can verify.
+A self-hosted deep-research platform. Ask a question — scout drafts a research
+plan you approve, runs parallel subagents across the web, and delivers a
+report where every claim cites a source you can open.
+
+Monorepo: **FastAPI backend** (`backend/`, uv, Python 3.12) + **Next.js
+frontend** (`apps/web`, Turborepo/pnpm).
+
+## Quick start
 
 ```bash
-scout "what HTTP status code should a successful DELETE return?"
+make setup     # env files + install backend (uv) + frontend (pnpm)
+make dev       # backend :7001 + web :3100 (parallel)
 ```
 
-## Goal
+Or all-Docker: `docker compose up --build`
 
-Build a research agent that is **trustworthy by construction**: every claim in
-its answer traces back to a URL the agent actually read. Not a chatbot with a
-search box — an agent loop with a step budget, source tracking, and honest
-failure ("I couldn't verify this") instead of confident hallucination.
-
-Design principles:
-
-1. **Citations or it didn't happen** — answers cite `[n]`-numbered sources;
-   the source table shows exactly which pages were read
-2. **Watch it think** — every tool call (search, read) streams to the terminal
-   live, so you see the reasoning path, not just the verdict
-3. **Provider-agnostic** — any OpenAI-compatible endpoint (GLM/z.ai default,
-   OpenRouter, Groq, OpenAI, local Ollama) via env vars; no vendor lock
-4. **Keyless search** — DuckDuckGo results + raw page fetches; no search API
-  key required to run it
-5. **Bounded** — a step budget stops runaway loops; the agent reports what it
-  found even when it runs out
-
-## Architecture
+## Layout
 
 ```
-question ──▶ agent loop (LLM + tools, max N steps)
-                │
-                ├── web_search   DuckDuckGo → titles, URLs, snippets
-                ├── web_read     fetch page → readable text (budgeted chars)
-                │
-                └── answer       markdown + [n] citations + source table
+scout/
+├── apps/web          Next.js 15 frontend (Turborepo)
+├── backend/          FastAPI + uv
+├── packages/         shared ts-config / eslint-config
+├── compose.yaml      postgres? no — sqlite for now; app services only
+└── Makefile          adda-style task runner
 ```
-
-- Python 3.12 · uv · httpx · ddgs · typer · rich
-- LLM: OpenAI-compatible chat completions with tool calling
 
 ## Status
 
-🚧 Building — see [TODO](#) for the roadmap.
+🚧 Phase 0 — boilerplate. See the plan in `.hermes/plans/`.
 
 ## License
 

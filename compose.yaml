@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "7001:7001"
+    env_file: .env
+    volumes:
+      - ./data:/data
+  web:
+    build: ./apps/web
+    ports:
+      - "3100:3100"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:7001
+    depends_on:
+      - backend
