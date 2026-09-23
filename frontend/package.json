@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start --port 3100",
     "lint": "oxlint . && eslint . && prettier --check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "cd .. && husky frontend/.husky"
