@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "react-hooks"],
+  "categories": { "correctness": "error" },
+  "rules": {
+    "eslint/no-console": ["warn", { "allow": ["warn", "error", "info", "group", "groupEnd"] }],
+    "eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "eslint/no-unused-expressions": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  },
+  "ignorePatterns": ["node_modules", ".next", "out", "next-env.d.ts"]
+}

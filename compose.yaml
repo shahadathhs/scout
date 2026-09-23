@@ -1,0 +1,47 @@
+name: scout
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-scout}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scout}
+      POSTGRES_DB: ${POSTGRES_DB:-scout}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-scout} -d ${POSTGRES_DB:-scout}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Inside the compose network the DB host is the "postgres" service.
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-scout}:${POSTGRES_PASSWORD:-scout}@postgres:5432/${POSTGRES_DB:-scout}
+    command: sh -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 7001"
+    ports:
+      - "${BACKEND_PORT:-7001}:7001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:${BACKEND_PORT:-7001}}
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3100}:3100"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

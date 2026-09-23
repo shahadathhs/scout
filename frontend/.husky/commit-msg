@@ -1,0 +1,8 @@
+# $1 is the commit-msg file path (relative to the repo root). Resolve it to an
+# absolute path before cd-ing into the frontend, so commitlint can still read it.
+msg_file="$1"
+case "$msg_file" in
+  /*) ;;
+  *) msg_file="$(pwd)/$msg_file" ;;
+esac
+cd frontend && pnpm exec commitlint --edit "$msg_file"

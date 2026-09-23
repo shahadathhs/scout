@@ -1,0 +1,7 @@
+{
+  "include": ["main.py", "core", "models", "alembic/env.py"],
+  "exclude": ["**/__pycache__", "alembic/versions"],
+  "typeCheckingMode": "standard",
+  "reportMissingImports": "error",
+  "reportMissingTypeStubs": "none"
+}

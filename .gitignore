@@ -1,0 +1,22 @@
+# ── Python / backend ─────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+.ruff_cache/
+.pytest_cache/
+backend/.env
+
+# ── Node / frontend ──────────────────────────────────────────────────────────
+node_modules/
+frontend/.next/
+frontend/out/
+*.tsbuildinfo
+.next-env.d.ts
+
+# ── Env files ────────────────────────────────────────────────────────────────
+.env
+.env.local
+
+# ── Misc ─────────────────────────────────────────────────────────────────────
+.DS_Store
+*.log
